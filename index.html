@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Авторизация Patreon</title>
-    <script>
-      window.onload = () => {
-        const hash = new URLSearchParams(window.location.hash.substring(1));
-        const token = hash.get("access_token");
-        if (!token) {
-          document.body.innerText = "Access token не найден в URL.";
-          return;
-        }
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    window.onload = () => {
+      const query = new URLSearchParams(window.location.search);
+      const code = query.get("code");
 
-        fetch(`http://localhost:12345/?token=${token}`)
-          .then(() => {
-            document.body.innerHTML = "<h2>Авторизация прошла успешно.</h2><p>Вы можете вернуться в игру.</p>";
-          })
-          .catch(() => {
-            document.body.innerText = "Не удалось передать токен в игру.";
-          });
-      };
-    </script>
-  </head>
-  <body>
-    <p>Авторизация... Ожидаем ответа.</p>
-  </body>
+      if (!code) {
+        document.body.innerText = "Ошибка: параметр 'code' не найден.";
+        return;
+      }
+
+      // Передаем код локальному серверу игры (Ren'Py)
+      fetch(`http://localhost:12345/?code=${code}`)
+        .then(() => {
+          document.body.innerHTML = "<h1>Готово! Можете вернуться в игру.</h1>";
+        })
+        .catch(() => {
+          document.body.innerText = "Не удалось передать код игре.";
+        });
+    };
+  </script>
+</head>
+<body>
+  Подождите... Перенаправление в игру.
+</body>
 </html>
