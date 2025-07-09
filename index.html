@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Авторизация Patreon</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      text-align: center;
+      background: #f7f7f7;
+    }
+    .error { color: red; }
+  </style>
+  <script>
+    async function sendCodeToRenPy() {
+      const query = new URLSearchParams(window.location.search);
+      const code = query.get("code");
+
+      if (!code) {
+        document.getElementById("message").innerHTML = "<span class='error'>Ошибка: параметр 'code' не найден.</span>";
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:12345/?code=${code}`);
+        if (response.ok) {
+          document.getElementById("message").innerText = "Авторизация завершена. Можете вернуться в игру.";
+        } else {
+          document.getElementById("message").innerHTML = "<span class='error'>Ошибка при отправке кода в игру.</span>";
+        }
+      } catch (e) {
+        document.getElementById("message").innerHTML = "<span class='error'>Не удалось подключиться к игре. Убедитесь, что она запущена.</span>";
+      }
+    }
+
+    window.onload = sendCodeToRenPy;
+  </script>
+</head>
+<body>
+  <h2>Подождите...</h2>
+  <div id="message">Происходит авторизация через Patreon...</div>
+</body>
+</html>
