@@ -9,22 +9,21 @@
       const code = query.get("code");
 
       if (!code) {
-        document.body.innerText = "Ошибка: параметр 'code' не найден.";
+        document.body.innerText = "Error: parameter 'code' not found.";
         return;
       }
 
-      // Передаем код локальному серверу игры (Ren'Py)
-      fetch(`http://localhost:12345/?code=${code}`)
-        .then(() => {
-          document.body.innerHTML = "<h1>Готово! Можете вернуться в игру.</h1>";
-        })
-        .catch(() => {
-          document.body.innerText = "Не удалось передать код игре.";
-        });
+      const isAndroid = /Android/i.test(navigator.userAgent);
+
+      if (isAndroid) {
+        window.location.href = `clickerapp://auth?code=${code}`;
+      } else {
+        window.location.href = `http://localhost:12345/?code=${code}`;
+      }
     };
   </script>
 </head>
 <body>
-  Подождите... Перенаправление в игру.
+  Please wait... Redirecting back to the app.
 </body>
 </html>
